@@ -2,15 +2,14 @@ package subsystems
 
 import (
 	"fmt"
-	"strings"
 	"os"
-	"path"
 	"bufio"
+	"strings"
+	"path"
 )
 
-
 func FindCgroupMountpoint(subsystem string) string {
-	f, err := os.Open("/proc/self/mountinfo")
+	f, err := os.Open("proc/self/mountinfo")
 	if err != nil {
 		return ""
 	}
@@ -37,8 +36,7 @@ func GetCgroupPath(subsystem string, cgroupPath string, autoCreate bool) (string
 	cgroupRoot := FindCgroupMountpoint(subsystem)
 	if _, err := os.Stat(path.Join(cgroupRoot, cgroupPath)); err == nil || (autoCreate && os.IsNotExist(err)) {
 		if os.IsNotExist(err) {
-			if err := os.Mkdir(path.Join(cgroupRoot, cgroupPath), 0755); err == nil {
-			} else {
+			if err := os.Mkdir(path.Join(cgroupRoot, cgroupPath), 0755); err != nil {
 				return "", fmt.Errorf("error create cgroup %v", err)
 			}
 		}

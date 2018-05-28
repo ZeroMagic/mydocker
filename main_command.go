@@ -20,9 +20,12 @@ var runCommand = cli.Command{
 		if len(context.Args()) < 1 {
 			return fmt.Errorf("Missing container commond")
 		}
-		cmd := context.Args().Get(0)
+		var cmdArray []string
+		for _, arg := range context.Args() {
+			cmdArray = append(cmdArray, arg)
+		}
 		tty := context.Bool("ti")
-		Run(tty, cmd)
+		Run(tty, cmdArray)
 		return nil
 	},
 }
@@ -30,7 +33,7 @@ var runCommand = cli.Command{
 var initCommand = cli.Command{
 	Name:	"init",
 	Usage:	"init container",
-	Action:	func（context *cli.Context) error {
+	Action:	func(context *cli.Context) error {
 		log.Info("init come on")
 		cmd := context.Args().Get(0)
 		log.Infof("command %s", cmd)
